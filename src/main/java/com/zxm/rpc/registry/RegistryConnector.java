@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 
 /**
- * @Author
+ * @Author zxm
  * @Description
  * @Date Create in 下午 4:51 2019/1/22 0022
  */
@@ -34,14 +34,15 @@ public class RegistryConnector {
         return host + ":" + port;
     }
 
-    private Collection<String> getAllUrls() {
+    public Collection<String> getAllUrls() {
         return jedis.keys("*");
     }
 
-    private String getUrl() {
-        boolean result = jedis.exists(joinKey(registryConfig.getHost(), registryConfig.getPort()));
+    public String getUrl(String host, Integer port) {
+        String url = joinKey(host, port);
+        boolean result = jedis.exists(url);
         if (result) {
-            return joinKey(registryConfig.getHost(), registryConfig.getPort());
+            return url;
         }
 
         throw new ServerNotFoundException("server is not found");
