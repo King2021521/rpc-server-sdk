@@ -1,4 +1,6 @@
 package com.zxm.rpc;
+import com.zxm.rpc.config.ReferenceConfig;
+
 import java.lang.reflect.Proxy;
 import java.net.InetAddress;
 
@@ -9,13 +11,14 @@ import java.net.InetAddress;
  */
 public class Runner {
     public static void main(String[] args) throws Exception{
-        InetAddress address = InetAddress.getLocalHost();
-        System.out.println(address.getHostAddress());
-
-        Runner m = new Runner();
+        /*Runner m = new Runner();
         IPayInterface iPayInterface = (IPayInterface) m.rpc(IPayInterface.class);
         boolean result = iPayInterface.pay(100);
-        System.out.println(result);
+        System.out.println(result);*/
+
+        /*ReferenceConfig referenceConfig = new ReferenceConfig();
+        referenceConfig.setReference("com.zxm.rpc.IPayInterface")
+        .init();*/
     }
 
     public Object rpc(Class clazz){
