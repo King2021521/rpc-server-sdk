@@ -1,5 +1,6 @@
 package com.zxm.rpc.remote;
 
+import com.zxm.rpc.proxy.ProviderProxyInvoker;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -21,8 +22,18 @@ public class NettySocketServer {
 
     private int port;
 
-    public NettySocketServer(int port) throws Exception {
-        this.port = port;
+    private ProviderProxyInvoker invoker;
+
+    public NettySocketServer(Integer port, ProviderProxyInvoker invoker) throws Exception {
+        if (null == port) {
+            this.port = 8888;
+        } else {
+            this.port = port.intValue();
+        }
+
+        if (invoker != null) {
+            this.invoker = invoker;
+        }
 
         this.init(port);
     }
@@ -45,8 +56,8 @@ public class NettySocketServer {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) {
                             socketChannel
-                            .pipeline()
-                            .addLast(new StringDecoder(), new StringEncoder(), new NettyServerReadHandler());
+                                    .pipeline()
+                                    .addLast(new StringDecoder(), new StringEncoder(), new NettyServerReadHandler(invoker));
                         }
                     });
 

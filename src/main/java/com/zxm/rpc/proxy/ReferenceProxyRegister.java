@@ -1,5 +1,6 @@
 package com.zxm.rpc.proxy;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zxm.rpc.config.ReferenceConfig;
 import com.zxm.rpc.remote.RpcProtocol;
 import com.zxm.rpc.remote.RpcResult;
@@ -13,10 +14,10 @@ import java.util.UUID;
  * @Description
  * @Date Create in 下午 3:56 2019/1/23 0023
  */
-public class ProxyRegisterFactory {
+public class ReferenceProxyRegister {
     private ReferenceConfig referenceConfig;
 
-    public ProxyRegisterFactory(ReferenceConfig referenceConfig) {
+    public ReferenceProxyRegister(ReferenceConfig referenceConfig) {
         this.referenceConfig = referenceConfig;
     }
 
@@ -29,7 +30,7 @@ public class ProxyRegisterFactory {
             protocol.setInterfaceName(clazz.getName());
             protocol.setMethodName(method.getName());
             protocol.setArgs(args);
-            referenceConfig.getSocketChannel().writeAndFlush(protocol);
+            referenceConfig.getSocketChannel().writeAndFlush(JSONObject.toJSONString(protocol));
 
             long pollTime = System.currentTimeMillis();
             while (true) {

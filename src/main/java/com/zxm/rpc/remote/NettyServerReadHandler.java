@@ -1,5 +1,7 @@
 package com.zxm.rpc.remote;
 
+import com.alibaba.fastjson.JSONObject;
+import com.zxm.rpc.proxy.ProviderProxyInvoker;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -14,15 +16,27 @@ import org.slf4j.LoggerFactory;
 public class NettyServerReadHandler extends SimpleChannelInboundHandler<String> {
     Logger log = LoggerFactory.getLogger(NettyServerReadHandler.class);
 
-    public NettyServerReadHandler(){
+    private ProviderProxyInvoker invoker;
+
+    public NettyServerReadHandler(ProviderProxyInvoker invoker) {
+        if (invoker != null) {
+            this.invoker = invoker;
+        }
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) {
-        channelReadExecute(ctx.channel(),msg);
+        channelReadExecute(ctx.channel(), msg);
     }
 
-    private void channelReadExecute(Channel channel, String msg){
+    private void channelReadExecute(Channel channel, String msg) {
+        RpcProtocol rpcProtocol = (RpcProtocol) JSONObject.parse(msg);
+        Object result = invoker.invoke(rpcProtocol);
+
+        RpcResult rpcResult = new RpcResult();
+        rpcResult.setId(rpcProtocol.getId());
+        rpcResult.setValue(result);
+        channel.writeAndFlush(JSONObject.toJSONString(rpcResult));
 
     }
 

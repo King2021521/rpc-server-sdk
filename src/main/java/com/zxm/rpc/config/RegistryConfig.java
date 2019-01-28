@@ -2,33 +2,53 @@ package com.zxm.rpc.config;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Set;
 
 /**
- * @Author
+ * @Author zxm
  * @Description
  * @Date Create in 下午 4:33 2019/1/22 0022
  */
 public class RegistryConfig {
-    private String host;
+    /**
+     * 注册中心host
+     */
+    private String registryHost;
 
-    private Integer port;
+    /**
+     * 注册中心端口
+     */
+    private Integer registryPort;
 
+    /**
+     * 应用名称
+     */
     private String serverName;
 
-    public String getHost() {
-        return host;
+    /**
+     * 服务提供方端口
+     */
+    private Integer port;
+
+    /**
+     * 服务提供接口集合
+     */
+    private Set<ProviderConfig> providerConfigs;
+
+    public String getRegistryHost() {
+        return registryHost;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setRegistryHost(String registryHost) {
+        this.registryHost = registryHost;
     }
 
-    public Integer getPort() {
-        return port;
+    public Integer getRegistryPort() {
+        return registryPort;
     }
 
-    public void setPort(Integer port) {
-        this.port = port;
+    public void setRegistryPort(Integer registryPort) {
+        this.registryPort = registryPort;
     }
 
     public String getServerName() {
@@ -39,7 +59,27 @@ public class RegistryConfig {
         this.serverName = serverName;
     }
 
-    public String getLocalHostAddrss() throws UnknownHostException{
-        return InetAddress.getLocalHost().getHostAddress();
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public Set<ProviderConfig> getProviderConfigs() {
+        return providerConfigs;
+    }
+
+    public void setProviderConfigs(Set<ProviderConfig> providerConfigs) {
+        this.providerConfigs = providerConfigs;
+    }
+
+    public String getLocalHostAddrss(){
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            return null;
+        }
     }
 }

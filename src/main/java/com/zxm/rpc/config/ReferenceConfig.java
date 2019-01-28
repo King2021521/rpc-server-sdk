@@ -23,7 +23,7 @@ public class ReferenceConfig {
         return remoteHost;
     }
 
-    public void setRemoteHost(){
+    public void setRemoteHost(String remoteHost){
         this.remoteHost = remoteHost;
     }
 
