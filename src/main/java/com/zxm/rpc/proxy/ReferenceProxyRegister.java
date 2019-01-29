@@ -25,16 +25,9 @@ public class ReferenceProxyRegister {
     public <T> T register(String interfaceName) throws ClassNotFoundException {
         Class clazz = Class.forName(interfaceName);
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, (Object proxy, Method method, Object[] args) -> {
-
-            RpcProtocol protocol = new RpcProtocol();
-            protocol.setId(UUID.randomUUID().toString().replace("-", ""));
-            protocol.setInterfaceName(clazz.getName());
-            protocol.setMethodName(method.getName());
-            protocol.setParameterTypes(method.getParameterTypes());
-            protocol.setArgs(args);
-
-            NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(),referenceConfig.getRemoteHost())
-            .getSocketChannel().writeAndFlush(JSONObject.toJSONString(protocol));
+            RpcProtocol protocol = buildRpcProtocol(clazz, method, args);
+            NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(), referenceConfig.getRemoteHost())
+                    .getSocketChannel().writeAndFlush(JSONObject.toJSONString(protocol));
 
             long pollTime = System.currentTimeMillis();
             while (true) {
@@ -42,14 +35,24 @@ public class ReferenceProxyRegister {
                     throw new RuntimeException("rpc request remote timeout");
                 }
 
-                RpcResult rpcResult = NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(),referenceConfig.getRemoteHost())
-                .getRpcResult(protocol.getId());
+                RpcResult rpcResult = NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(), referenceConfig.getRemoteHost())
+                        .getRpcResult(protocol.getId());
                 if (rpcResult != null) {
-                    NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(),referenceConfig.getRemoteHost())
-                    .removeRpcResult(protocol.getId());
+                    NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(), referenceConfig.getRemoteHost())
+                            .removeRpcResult(protocol.getId());
                     return rpcResult.getValue();
                 }
             }
         });
+    }
+
+    private RpcProtocol buildRpcProtocol(Class clazz, Method method, Object[] args) {
+        RpcProtocol protocol = new RpcProtocol();
+        protocol.setId(UUID.randomUUID().toString().replace("-", ""));
+        protocol.setInterfaceName(clazz.getName());
+        protocol.setMethodName(method.getName());
+        protocol.setParameterTypes(method.getParameterTypes());
+        protocol.setArgs(args);
+        return protocol;
     }
 }

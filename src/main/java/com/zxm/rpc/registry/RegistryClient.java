@@ -14,14 +14,14 @@ import java.util.*;
  * @Description
  * @Date Create in 下午 4:51 2019/1/22 0022
  */
-public class RegistryConnector {
+public class RegistryClient {
     private static final String REGISTRY_PREFIX = "rpc-registry:";
 
     private RegistryConfig registryConfig;
 
     private Jedis jedis;
 
-    public RegistryConnector(RegistryConfig registryConfig) {
+    public RegistryClient(RegistryConfig registryConfig) {
         this.registryConfig = registryConfig;
         jedis = new Jedis(registryConfig.getRegistryHost(), registryConfig.getRegistryPort());
     }

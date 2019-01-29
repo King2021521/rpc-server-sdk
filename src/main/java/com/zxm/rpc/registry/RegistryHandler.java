@@ -1,10 +1,8 @@
 package com.zxm.rpc.registry;
 
 import com.zxm.rpc.config.RegistryConfig;
-import com.zxm.rpc.remote.NettySocketServer;
 
 import java.net.UnknownHostException;
-import java.util.Collection;
 
 /**
  * @Author zxm
@@ -14,23 +12,23 @@ import java.util.Collection;
 public class RegistryHandler {
     private RegistryConfig registryConfig;
 
-    private RegistryConnector registryConnector;
+    private RegistryClient registryClient;
 
     public RegistryHandler(RegistryConfig registryConfig) {
         this.registryConfig = registryConfig;
-        this.registryConnector = new RegistryConnector(registryConfig);
+        this.registryClient = new RegistryClient(registryConfig);
     }
 
     public boolean registry() throws UnknownHostException {
-        return registryConnector.registry();
+        return registryClient.registry();
     }
 
     public String getUrls(String serverName) {
-        return registryConnector.getUrls(serverName);
+        return registryClient.getUrls(serverName);
     }
 
     public String getImplementClass(String apiName){
-        return registryConnector.getImplementClass(apiName);
+        return registryClient.getImplementClass(apiName);
     }
 
 }
