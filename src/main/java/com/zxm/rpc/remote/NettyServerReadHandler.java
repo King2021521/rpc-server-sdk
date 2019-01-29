@@ -2,6 +2,8 @@ package com.zxm.rpc.remote;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zxm.rpc.proxy.ProviderProxyInvoker;
+import com.zxm.rpc.utils.RpcProtocol;
+import com.zxm.rpc.utils.RpcResult;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -30,14 +32,13 @@ public class NettyServerReadHandler extends SimpleChannelInboundHandler<String> 
     }
 
     private void channelReadExecute(Channel channel, String msg) {
-        RpcProtocol rpcProtocol = (RpcProtocol) JSONObject.parse(msg);
+        RpcProtocol rpcProtocol = JSONObject.parseObject(msg, RpcProtocol.class);
         Object result = invoker.invoke(rpcProtocol);
 
         RpcResult rpcResult = new RpcResult();
         rpcResult.setId(rpcProtocol.getId());
         rpcResult.setValue(result);
         channel.writeAndFlush(JSONObject.toJSONString(rpcResult));
-
     }
 
     @Override

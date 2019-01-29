@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  * @Date Create in 下午 2:19 2018/6/15 0015
  */
 @ChannelHandler.Sharable
-public class NettySocketServer {
+public class NettySocketServer implements Runnable{
     private static final Log log = LogFactory.getLog(NettySocketServer.class);
 
     private int port;
@@ -34,8 +34,14 @@ public class NettySocketServer {
         if (invoker != null) {
             this.invoker = invoker;
         }
+    }
 
-        this.init(port);
+    @Override
+    public void run() {
+        try {
+            this.init(port);
+        } catch (Exception e) {
+        }
     }
 
     private void init(int port) throws Exception {
@@ -64,9 +70,9 @@ public class NettySocketServer {
             ChannelFuture f = bootstrap.bind(port).sync();
 
             if (f.isSuccess()) {
-                log.info("netty server started success!!!\r\n（Copyright© Nicholas.Tony)");
+                System.out.println("netty server started success!!!\r\n（Copyright© Nicholas.Tony)");
             } else {
-                log.error("long connection started fail");
+                System.out.println("long connection started fail");
             }
 
 

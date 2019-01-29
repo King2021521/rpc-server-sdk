@@ -1,4 +1,4 @@
-package com.zxm.rpc.remote;
+package com.zxm.rpc.utils;
 
 import java.io.Serializable;
 
@@ -15,6 +15,8 @@ public class RpcProtocol implements Serializable{
     private String interfaceName;
 
     private String methodName;
+
+    private Class[] parameterTypes;
 
     private Object[] args;
 
@@ -40,6 +42,14 @@ public class RpcProtocol implements Serializable{
 
     public void setMethodName(String methodName) {
         this.methodName = methodName;
+    }
+
+    public Class[] getParameterTypes() {
+        return parameterTypes;
+    }
+
+    public void setParameterTypes(Class[] parameterTypes) {
+        this.parameterTypes = parameterTypes;
     }
 
     public Object[] getArgs() {

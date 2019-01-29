@@ -2,8 +2,8 @@ package com.zxm.rpc.proxy;
 
 import com.zxm.rpc.config.RegistryConfig;
 import com.zxm.rpc.registry.RegistryHandler;
-import com.zxm.rpc.remote.NettySocketServerFactory;
-import com.zxm.rpc.remote.RpcProtocol;
+import com.zxm.rpc.remote.NettySocketServer;
+import com.zxm.rpc.utils.RpcProtocol;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,16 +24,24 @@ public class ProviderProxyInvoker {
         }
         this.registryConfig = registryConfig;
         this.registryHandler = registryHandler;
+        init(registryConfig);
     }
 
     private void init(RegistryConfig registryConfig){
-        NettySocketServerFactory.newInstance(registryConfig.getPort(),this);
+        Thread thread = null;
+        try {
+            thread = new Thread(new NettySocketServer(registryConfig.getPort(),this));
+        } catch (Exception e) {
+        }
+        thread.start();
     }
 
     public Object invoke(RpcProtocol rpcProtocol){
-        Class implementClass = registryHandler.getImplementClass(rpcProtocol.getInterfaceName());
+        String implementClassName = registryHandler.getImplementClass(rpcProtocol.getInterfaceName());
+        Class implementClass ;
         Class clazz;
         try {
+            implementClass = Class.forName(implementClassName);
             clazz = Class.forName(rpcProtocol.getInterfaceName());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("api "+rpcProtocol.getInterfaceName()+" is not found");
@@ -41,16 +49,18 @@ public class ProviderProxyInvoker {
 
         Method method;
         try {
-            method = clazz.getMethod(rpcProtocol.getMethodName());
+            method = clazz.getMethod(rpcProtocol.getMethodName(),rpcProtocol.getParameterTypes());
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("method "+rpcProtocol.getMethodName()+" is not found");
         }
 
         try {
-            return method.invoke(implementClass,rpcProtocol.getArgs());
+            return method.invoke(implementClass.newInstance(),rpcProtocol.getArgs());
         } catch (IllegalAccessException e) {
             return null;
         } catch (InvocationTargetException e) {
+            return null;
+        } catch (InstantiationException e) {
             return null;
         }
     }

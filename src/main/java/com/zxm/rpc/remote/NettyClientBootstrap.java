@@ -1,5 +1,6 @@
 package com.zxm.rpc.remote;
 
+import com.zxm.rpc.utils.RpcResult;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -47,6 +48,7 @@ public class NettyClientBootstrap {
             }
         });
         ChannelFuture future = bootstrap.connect(this.host, this.port).sync();
+        System.out.println("------"+future);
         if (future.isSuccess()) {
             socketChannel = (SocketChannel) future.channel();
             System.out.println("connect server  success|");

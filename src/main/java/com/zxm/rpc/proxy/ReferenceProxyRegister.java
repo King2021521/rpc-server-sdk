@@ -2,8 +2,9 @@ package com.zxm.rpc.proxy;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zxm.rpc.config.ReferenceConfig;
-import com.zxm.rpc.remote.RpcProtocol;
-import com.zxm.rpc.remote.RpcResult;
+import com.zxm.rpc.remote.NettySocketClientFactory;
+import com.zxm.rpc.utils.RpcProtocol;
+import com.zxm.rpc.utils.RpcResult;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -29,8 +30,11 @@ public class ReferenceProxyRegister {
             protocol.setId(UUID.randomUUID().toString().replace("-", ""));
             protocol.setInterfaceName(clazz.getName());
             protocol.setMethodName(method.getName());
+            protocol.setParameterTypes(method.getParameterTypes());
             protocol.setArgs(args);
-            referenceConfig.getSocketChannel().writeAndFlush(JSONObject.toJSONString(protocol));
+
+            NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(),referenceConfig.getRemoteHost())
+            .getSocketChannel().writeAndFlush(JSONObject.toJSONString(protocol));
 
             long pollTime = System.currentTimeMillis();
             while (true) {
@@ -38,9 +42,11 @@ public class ReferenceProxyRegister {
                     throw new RuntimeException("rpc request remote timeout");
                 }
 
-                RpcResult rpcResult = referenceConfig.getRpcResult(protocol.getId());
+                RpcResult rpcResult = NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(),referenceConfig.getRemoteHost())
+                .getRpcResult(protocol.getId());
                 if (rpcResult != null) {
-                    referenceConfig.removeRpcResult(protocol.getId());
+                    NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(),referenceConfig.getRemoteHost())
+                    .removeRpcResult(protocol.getId());
                     return rpcResult.getValue();
                 }
             }

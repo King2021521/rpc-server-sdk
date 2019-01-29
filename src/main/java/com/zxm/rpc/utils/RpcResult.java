@@ -1,4 +1,4 @@
-package com.zxm.rpc.remote;
+package com.zxm.rpc.utils;
 
 import java.io.Serializable;
 

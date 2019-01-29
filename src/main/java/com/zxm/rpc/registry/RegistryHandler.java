@@ -29,7 +29,7 @@ public class RegistryHandler {
         return registryConnector.getUrls(serverName);
     }
 
-    public Class getImplementClass(String apiName){
+    public String getImplementClass(String apiName){
         return registryConnector.getImplementClass(apiName);
     }
 

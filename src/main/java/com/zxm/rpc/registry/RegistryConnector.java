@@ -72,9 +72,9 @@ public class RegistryConnector {
      * @return
      * @throws UnknownHostException
      */
-    public Class getImplementClass(String apiName){
+    public String getImplementClass(String apiName){
         String key = joinKey(registryConfig.getServerName(), registryConfig.getLocalHostAddrss(), registryConfig.getPort());
         String result = jedis.get(key);
-        return (Class) JSONObject.parseObject(result).get(apiName);
+        return JSONObject.parseObject(result).get(apiName).toString();
     }
 }
