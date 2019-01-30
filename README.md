@@ -2,7 +2,7 @@
 一款集服务发现、rpc通信于一体的框架，通信层基于netty实现，底层原理基于反射、动态代理实现。
 纯基于Javaconfig方式配置，无xml。配置中心基于redis。  
 关键词: netty、动态代理、javaconfig、redis  
-####服务提供端配置：
+#### 服务提供端配置：
 ```
  @Configuration  
  public class RpcConfig {  
@@ -41,7 +41,7 @@
      }
  }  
 ``` 
-####服务消费端配置：
+#### 服务消费端配置：
 ```
 @Configuration
 public class RefConfig {
