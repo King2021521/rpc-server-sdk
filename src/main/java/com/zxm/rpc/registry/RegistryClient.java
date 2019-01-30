@@ -36,6 +36,11 @@ public class RegistryClient {
         return false;
     }
 
+    public void destroy(){
+        String key = joinKey(registryConfig.getServerName(), registryConfig.getLocalHostAddrss(), registryConfig.getPort());
+        jedis.del(key);
+    }
+
     private String joinKey(String serverName, String host, Integer port) {
         return REGISTRY_PREFIX + serverName + ":" + host + ":" + port;
     }

@@ -2,8 +2,6 @@ package com.zxm.rpc.registry;
 
 import com.zxm.rpc.config.RegistryConfig;
 
-import java.net.UnknownHostException;
-
 /**
  * @Author zxm
  * @Description
@@ -19,7 +17,7 @@ public class RegistryHandler {
         this.registryClient = new RegistryClient(registryConfig);
     }
 
-    public boolean registry() throws UnknownHostException {
+    public boolean registry() {
         return registryClient.registry();
     }
 
@@ -27,8 +25,7 @@ public class RegistryHandler {
         return registryClient.getUrls(serverName);
     }
 
-    public String getImplementClass(String apiName){
+    public String getImplementClass(String apiName) {
         return registryClient.getImplementClass(apiName);
     }
-
 }
