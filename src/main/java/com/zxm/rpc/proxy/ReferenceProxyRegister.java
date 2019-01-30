@@ -1,10 +1,10 @@
 package com.zxm.rpc.proxy;
 
-import com.alibaba.fastjson.JSONObject;
 import com.zxm.rpc.config.ReferenceConfig;
 import com.zxm.rpc.remote.NettySocketClientFactory;
 import com.zxm.rpc.utils.RpcProtocol;
 import com.zxm.rpc.utils.RpcResult;
+import com.zxm.rpc.utils.RpcSerializer;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -25,9 +25,9 @@ public class ReferenceProxyRegister {
     public <T> T register(String interfaceName) throws ClassNotFoundException {
         Class clazz = Class.forName(interfaceName);
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, (Object proxy, Method method, Object[] args) -> {
-            RpcProtocol protocol = buildRpcProtocol(clazz, method, args);
+            RpcProtocol protocol = rpcProtocolWrapper(clazz, method, args);
             NettySocketClientFactory.newInstance(referenceConfig.getRemotePort(), referenceConfig.getRemoteHost())
-                    .getSocketChannel().writeAndFlush(JSONObject.toJSONString(protocol));
+                    .getSocketChannel().writeAndFlush(RpcSerializer.serialize(protocol));
 
             long pollTime = System.currentTimeMillis();
             while (true) {
@@ -46,7 +46,7 @@ public class ReferenceProxyRegister {
         });
     }
 
-    private RpcProtocol buildRpcProtocol(Class clazz, Method method, Object[] args) {
+    private RpcProtocol rpcProtocolWrapper(Class clazz, Method method, Object[] args) {
         RpcProtocol protocol = new RpcProtocol();
         protocol.setId(UUID.randomUUID().toString().replace("-", ""));
         protocol.setInterfaceName(clazz.getName());

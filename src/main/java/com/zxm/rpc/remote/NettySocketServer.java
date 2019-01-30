@@ -70,9 +70,9 @@ public class NettySocketServer implements Runnable{
             ChannelFuture f = bootstrap.bind(port).sync();
 
             if (f.isSuccess()) {
-                System.out.println("netty server started success!!!\r\n（Copyright© Nicholas.Tony)");
+                log.info("netty server started success!!!\r\n（Copyright© Nicholas.Tony)");
             } else {
-                System.out.println("long connection started fail");
+                log.info("long connection started fail");
             }
 
 
