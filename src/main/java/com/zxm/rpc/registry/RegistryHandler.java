@@ -10,11 +10,11 @@ import com.zxm.rpc.config.RegistryConfig;
 public class RegistryHandler {
     private RegistryConfig registryConfig;
 
-    private RegistryClient registryClient;
+    private final RegistryClient registryClient;
 
     public RegistryHandler(RegistryConfig registryConfig) {
         this.registryConfig = registryConfig;
-        this.registryClient = new RegistryClient(registryConfig);
+        this.registryClient = new RegistryClient(this.registryConfig);
     }
 
     public boolean registry() {

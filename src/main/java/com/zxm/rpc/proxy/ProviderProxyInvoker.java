@@ -24,7 +24,7 @@ public class ProviderProxyInvoker {
         }
         this.registryConfig = registryConfig;
         this.registryHandler = registryHandler;
-        init(registryConfig);
+        init(this.registryConfig);
     }
 
     /**
