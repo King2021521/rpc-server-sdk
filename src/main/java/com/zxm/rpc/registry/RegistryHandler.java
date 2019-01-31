@@ -21,10 +21,6 @@ public class RegistryHandler {
         return registryClient.registry();
     }
 
-    public String getUrls(String serverName) {
-        return registryClient.getUrls(serverName);
-    }
-
     public String getImplementClass(String apiName) {
         return registryClient.getImplementClass(apiName);
     }

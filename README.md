@@ -56,25 +56,17 @@
 ```
 @Configuration
 public class RefConfig {
-
     @Bean
-    public ReferenceConfig referenceConfig(){
-        ReferenceConfig referenceConfig = new ReferenceConfig();
-        referenceConfig.setRemoteHost("10.13.1.210");
-        referenceConfig.setRemotePort(3333);
-        referenceConfig.setTimeout(5000);
-        return referenceConfig;
-    }
-
-    @Bean
-    public ReferenceProxyRegister proxyRegisterFactory(){
-        ReferenceProxyRegister referenceProxyRegister = new ReferenceProxyRegister(referenceConfig());
-        return referenceProxyRegister;
-    }
-
-    @Bean
-    public IUserServiceApi iUserServiceApi() throws Exception{
-        return proxyRegisterFactory().register("com.zxm.rpc.api.IUserServiceApi");
+    public IUserServiceApi referenceConfig() {
+        ReferenceConfig<IUserServiceApi> referenceConfig = ReferenceConfig
+                .instance()
+                .apiName("com.zxm.rpc.api.IUserServiceApi")
+                .providerName("spring-boot-demo")
+                .registryHost("10.13.1.210")
+                .registryPort(6379)
+                .timeout(5000)
+                .build();
+        return referenceConfig.register();
     }
 }
 ```
