@@ -1,6 +1,6 @@
 package com.zxm.rpc.config;
 
-import com.zxm.rpc.proxy.ReferenceProxyRegister;
+import com.zxm.rpc.proxy.ReferenceProxyInvoker;
 
 /**
  * @Author
@@ -8,7 +8,7 @@ import com.zxm.rpc.proxy.ReferenceProxyRegister;
  * @Date Create in 上午 10:47 2019/1/23 0023
  */
 public class ReferenceConfig<T> {
-    private ReferenceProxyRegister referenceProxyRegister;
+    private ReferenceProxyInvoker referenceProxyInvoker;
 
     //ms
     private long timeout = 5000;
@@ -83,13 +83,13 @@ public class ReferenceConfig<T> {
     }
 
     public ReferenceConfig build(){
-        this.referenceProxyRegister = new ReferenceProxyRegister(this);
+        this.referenceProxyInvoker = new ReferenceProxyInvoker(this);
         return this;
     }
 
     public T register() {
         try {
-            return this.referenceProxyRegister.register();
+            return this.referenceProxyInvoker.register();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("register fail, msg is :" + e.getMessage());
         }

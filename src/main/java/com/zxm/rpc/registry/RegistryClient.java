@@ -3,6 +3,8 @@ package com.zxm.rpc.registry;
 import com.alibaba.fastjson.JSONObject;
 import com.zxm.rpc.config.ProviderConfig;
 import com.zxm.rpc.config.RegistryConfig;
+import com.zxm.rpc.registry.jedis.JedisTemplate;
+import com.zxm.rpc.registry.jedis.JedisTemplateFactory;
 
 import java.net.UnknownHostException;
 import java.util.*;

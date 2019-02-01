@@ -29,7 +29,8 @@ public class NettyServerReadHandler extends SimpleChannelInboundHandler<String> 
     }
 
     private void channelReadExecute(Channel channel, String msg) {
-        NettyServerDispatcher.threadPool.submit(new NettyServerDispatcherHandler(invoker,channel,msg));
+        log.info("remote [{}] request success, params is:{}", channel.remoteAddress(), msg);
+        NettyServerDispatcher.threadPool.submit(new NettyServerDispatcherHandler(invoker, channel, msg));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.zxm.rpc.registry;
+package com.zxm.rpc.registry.jedis;
 
 import redis.clients.jedis.Jedis;
 
